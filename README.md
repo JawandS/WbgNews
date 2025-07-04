@@ -25,7 +25,11 @@ A modern, responsive Flask web application for news publishing, designed for dep
 WbgNews/
 ├── app.py                 # Main Flask application
 ├── requirements.txt       # Python dependencies
+├── runtime.txt           # Python version for Render
+├── render.yaml           # Infrastructure as Code config
 ├── README.md             # This file
+├── DEPLOYMENT.md         # Deployment guide
+├── .gitignore           # Git ignore file
 ├── templates/            # Jinja2 templates
 │   ├── base.html         # Base template
 │   ├── index.html        # Homepage
@@ -69,7 +73,6 @@ WbgNews/
 4. **Set environment variables** (optional):
    ```bash
    export FLASK_DEBUG=True
-   export SECRET_KEY=your-secret-key-here
    ```
 
 5. **Run the application**:
@@ -90,7 +93,21 @@ WbgNews/
 
 ## 🚀 Deployment on Render
 
-### Method 1: Connect GitHub Repository
+### Method 1: Infrastructure as Code (Recommended)
+
+This project includes a `render.yaml` file for easy deployment:
+
+1. **Fork or push this code to your GitHub repository**
+
+2. **Connect to Render**:
+   - Go to [Render Dashboard](https://dashboard.render.com/)
+   - Click "New +" → "Blueprint"
+   - Connect your GitHub repository
+   - Render will automatically detect the `render.yaml` file
+
+3. **Deploy**: Render will automatically build and deploy your application based on the configuration in `render.yaml`
+
+### Method 2: Manual Web Service Creation
 
 1. **Fork or push this code to your GitHub repository**
 
@@ -109,13 +126,12 @@ WbgNews/
 
 4. **Set environment variables**:
    ```
-   SECRET_KEY=your-production-secret-key-here
    FLASK_DEBUG=False
    ```
 
 5. **Deploy**: Click "Create Web Service"
 
-### Method 2: Manual Deployment
+### Method 3: Using Render CLI
 
 1. **Install Render CLI** (if preferred):
    ```bash
@@ -129,11 +145,11 @@ WbgNews/
 
 ## 🔒 Environment Variables
 
-Set these environment variables in production:
+Environment variables are automatically configured through the `render.yaml` file:
 
-- `SECRET_KEY`: A secure secret key for Flask sessions
 - `FLASK_DEBUG`: Set to `False` in production
 - `PORT`: Automatically set by Render
+- `PYTHON_VERSION`: Specified as `3.9.16`
 
 ## 📱 Responsive Design
 

@@ -1,12 +1,14 @@
 # Deployment Guide for Render
 
-This guide will help you deploy your WbgNews Flask application to Render.
+This guide will help you deploy your WbgNews Flask application to Render using Infrastructure as Code.
 
-## Quick Deploy Button
+## Quick Deploy with render.yaml
 
-You can deploy this application to Render with one click:
+This project includes a `render.yaml` file for easy Infrastructure as Code deployment:
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+1. **Push to GitHub**: Make sure all files including `render.yaml` are pushed to your repository
+2. **Connect Repository**: Go to [Render Dashboard](https://dashboard.render.com/) and connect your GitHub repository
+3. **Automatic Deployment**: Render will automatically detect the `render.yaml` file and deploy your application
 
 ## Manual Deployment Steps
 
@@ -40,14 +42,7 @@ Start Command: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
 Set these environment variables in the Render dashboard:
 
 ```
-SECRET_KEY=your-very-secure-secret-key-here-make-it-long-and-random
 FLASK_DEBUG=False
-```
-
-To generate a secure secret key, you can use:
-```python
-import secrets
-print(secrets.token_hex(32))
 ```
 
 ### 5. Deploy
