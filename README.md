@@ -1,12 +1,14 @@
-# WbgNews - Flask News Application
+# Williamsburg Local News - Community News Application
 
-A modern, responsive Flask web application for news publishing, designed for deployment on Render.
+A modern, responsive Flask web application focused on Williamsburg local news and community events, designed for deployment on Render.
 
 ## 🚀 Features
 
-- **Modern UI**: Clean, responsive design using Bootstrap 5
+- **Modern UI**: Clean, responsive design using Bootstrap 5 with colonial-themed styling
 - **Mobile-First**: Optimized for all device sizes
-- **API Endpoints**: RESTful API for news data
+- **Local Focus**: Williamsburg community news, events, and announcements
+- **Events Calendar**: Community events and local happenings
+- **API Endpoints**: RESTful API for news and events data
 - **Error Handling**: Custom 404 and 500 error pages
 - **Health Monitoring**: Built-in health check endpoint
 - **SEO Ready**: Proper meta tags and semantic HTML
@@ -30,15 +32,16 @@ WbgNews/
 ├── README.md             # This comprehensive guide
 ├── .gitignore           # Git ignore file
 ├── templates/            # Jinja2 templates
-│   ├── base.html         # Base template
-│   ├── index.html        # Homepage
-│   ├── news.html         # News listing
-│   ├── about.html        # About page
+│   ├── base.html         # Base template with Williamsburg branding
+│   ├── index.html        # Homepage with community focus
+│   ├── news.html         # Local news and announcements
+│   ├── events.html       # Community events page
+│   ├── about.html        # About Williamsburg Local News
 │   ├── 404.html          # 404 error page
 │   └── 500.html          # 500 error page
 └── static/               # Static assets
     ├── css/
-    │   └── style.css     # Custom styles
+    │   └── style.css     # Custom styles with colonial theme
     └── js/
         └── main.js       # Custom JavaScript
 ```
@@ -84,11 +87,13 @@ WbgNews/
 
 ## 🌐 API Endpoints
 
-- `GET /` - Homepage
-- `GET /news` - News listing page
-- `GET /about` - About page
+- `GET /` - Homepage with Williamsburg community focus
+- `GET /news` - Local news and announcements page
+- `GET /events` - Community events page
+- `GET /about` - About Williamsburg Local News
 - `GET /api/health` - Health check endpoint
-- `GET /api/news` - JSON API for news data
+- `GET /api/news` - JSON API for local news data
+- `GET /api/events` - JSON API for community events data
 
 ## 🚀 Deployment on Render
 
@@ -179,7 +184,7 @@ Your application includes a health check endpoint at `/api/health` that returns:
 {
   "status": "healthy",
   "timestamp": "2025-07-04T...",
-  "service": "WbgNews"
+  "service": "Williamsburg Local News"
 }
 ```
 
@@ -307,7 +312,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support and questions:
 - Create an issue in the GitHub repository
-- Contact: info@wbgnews.com
+- Contact: info@williamsburgnews.com
 - Check the [Render Documentation](https://render.com/docs)
 - Join the [Render Community](https://community.render.com/)
 
@@ -317,9 +322,11 @@ After deployment, consider adding:
 - Database integration (PostgreSQL on Render)
 - User authentication system
 - Admin panel for content management
-- Real news API integration
-- Comment system
-- Newsletter functionality
+- Real Williamsburg news API integration
+- Community event submission system
+- Local business directory
+- Weather and traffic integration
+- Newsletter functionality for residents
 - Social media integration
 - Analytics and monitoring
 

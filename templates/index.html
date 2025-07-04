@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="hero-section bg-gradient-primary text-white py-5">
+<div class="hero-section bg-gradient-colonial text-white py-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Welcome to WbgNews</h1>
-                <p class="lead mb-4">Your premier destination for breaking news, in-depth analysis, and comprehensive coverage of events that matter to you.</p>
-                <a href="{{ url_for('news') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-newspaper me-2"></i>Read Latest News
-                </a>
+                <h1 class="display-4 fw-bold mb-4">Welcome to Williamsburg</h1>
+                <p class="lead mb-4">Your premier destination for local news, community events, and everything happening in historic Williamsburg. Stay connected with your neighbors and community.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('news') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-newspaper me-2"></i>Local News
+                    </a>
+                    <a href="{{ url_for('events') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-calendar me-2"></i>Events
+                    </a>
+                </div>
             </div>
             <div class="col-lg-6 text-center">
-                <i class="fas fa-globe-americas display-1 opacity-75"></i>
+                <i class="fas fa-landmark display-1 opacity-75"></i>
             </div>
         </div>
     </div>
@@ -22,23 +27,31 @@
     <div class="row">
         <div class="col-lg-8">
             <section class="mb-5">
-                <h2 class="mb-4">Featured Stories</h2>
+                <h2 class="mb-4">Latest Community News</h2>
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Breaking News Alert</h5>
-                                <p class="card-text">Stay updated with the latest breaking news from around the world. Our team of experienced journalists brings you accurate and timely reporting.</p>
-                                <small class="text-muted">2 hours ago</small>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge bg-colonial">Community</span>
+                                    <small class="text-muted">Today</small>
+                                </div>
+                                <h5 class="card-title">New Community Center Opens</h5>
+                                <p class="card-text">The Historic District welcomes a new community center offering programs for all ages and backgrounds.</p>
+                                <a href="{{ url_for('news') }}" class="btn btn-sm btn-outline-colonial">Read More</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Technology Insights</h5>
-                                <p class="card-text">Discover the latest trends in technology, from AI breakthroughs to cutting-edge innovations that are shaping our future.</p>
-                                <small class="text-muted">5 hours ago</small>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge bg-success">Events</span>
+                                    <small class="text-muted">July 4th</small>
+                                </div>
+                                <h5 class="card-title">Independence Day Celebration</h5>
+                                <p class="card-text">Join us tonight for fireworks over Colonial Lake and celebrate America's independence with your community.</p>
+                                <a href="{{ url_for('events') }}" class="btn btn-sm btn-outline-colonial">View Events</a>
                             </div>
                         </div>
                     </div>
@@ -46,28 +59,28 @@
             </section>
 
             <section class="mb-5">
-                <h2 class="mb-4">Why Choose WbgNews?</h2>
+                <h2 class="mb-4">Why Williamsburg Local News?</h2>
                 <div class="row">
                     <div class="col-md-4 text-center mb-4">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-clock fa-3x text-primary"></i>
+                            <i class="fas fa-users fa-3x text-colonial"></i>
                         </div>
-                        <h5>Real-time Updates</h5>
-                        <p>Get the latest news as it happens with our real-time reporting system.</p>
+                        <h5>Community Focused</h5>
+                        <p>Stories that matter to Williamsburg residents, from local government to neighborhood events.</p>
                     </div>
                     <div class="col-md-4 text-center mb-4">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                            <i class="fas fa-map-marker-alt fa-3x text-colonial"></i>
                         </div>
-                        <h5>Trusted Sources</h5>
-                        <p>All our content is verified and sourced from reliable, credible news outlets.</p>
+                        <h5>Local Coverage</h5>
+                        <p>In-depth reporting on Historic District developments, school board meetings, and city council decisions.</p>
                     </div>
                     <div class="col-md-4 text-center mb-4">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-mobile-alt fa-3x text-primary"></i>
+                            <i class="fas fa-clock fa-3x text-colonial"></i>
                         </div>
-                        <h5>Mobile Friendly</h5>
-                        <p>Access news on any device with our responsive, mobile-optimized design.</p>
+                        <h5>Timely Updates</h5>
+                        <p>Stay informed about road closures, weather alerts, and breaking news that affects your daily life.</p>
                     </div>
                 </div>
             </section>
@@ -75,48 +88,55 @@
 
         <div class="col-lg-4">
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-fire me-2"></i>Trending Now</h5>
+                <div class="card-header bg-colonial text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Upcoming Events</h5>
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
                         <li class="mb-3">
-                            <a href="#" class="text-decoration-none">
-                                <strong>Global Climate Summit Results</strong>
-                                <br>
-                                <small class="text-muted">World leaders reach new agreements...</small>
-                            </a>
+                            <strong>Summer Concert Series</strong>
+                            <br>
+                            <small class="text-muted">July 10, 7:00 PM - Colonial Park</small>
+                            <br>
+                            <span class="text-colonial">Live music featuring local bands</span>
                         </li>
                         <li class="mb-3">
-                            <a href="#" class="text-decoration-none">
-                                <strong>Tech Giants Announce Partnership</strong>
-                                <br>
-                                <small class="text-muted">Revolutionary collaboration in AI development...</small>
-                            </a>
+                            <strong>Heritage Festival</strong>
+                            <br>
+                            <small class="text-muted">July 15, 10:00 AM - Historic District</small>
+                            <br>
+                            <span class="text-colonial">Celebrate our community's history</span>
                         </li>
                         <li class="mb-3">
-                            <a href="#" class="text-decoration-none">
-                                <strong>Sports Championship Finals</strong>
-                                <br>
-                                <small class="text-muted">Unexpected upsets in this year's tournament...</small>
-                            </a>
+                            <strong>Town Hall Meeting</strong>
+                            <br>
+                            <small class="text-muted">July 20, 7:30 PM - City Hall</small>
+                            <br>
+                            <span class="text-colonial">Monthly community discussion</span>
                         </li>
                     </ul>
+                    <a href="{{ url_for('events') }}" class="btn btn-colonial w-100">View All Events</a>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Newsletter</h5>
+                <div class="card-header bg-colonial text-white">
+                    <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Community Alerts</h5>
                 </div>
                 <div class="card-body">
-                    <p>Stay informed with our daily newsletter.</p>
-                    <form>
-                        <div class="mb-3">
-                            <input type="email" class="form-control" placeholder="Enter your email">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Subscribe</button>
-                    </form>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Road Work Notice:</strong> Main Street will have lane closures July 8-12 for maintenance.
+                    </div>
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-leaf me-2"></i>
+                        <strong>Recycling Day:</strong> Extra pickup scheduled for July 6th due to holiday schedule.
+                    </div>
+                    <p class="mb-0">
+                        <small class="text-muted">
+                            Stay updated with community announcements and important notices.
+                        </small>
+                    </p>
                 </div>
             </div>
         </div>

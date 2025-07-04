@@ -1,6 +1,6 @@
 """
-WbgNews Flask Application
-Main application file
+Williamsburg Local News Application
+Local news and events for the Williamsburg community
 """
 
 from flask import Flask, render_template, jsonify
@@ -23,7 +23,7 @@ def create_app():
     def index():
         """Homepage"""
         return render_template('index.html', 
-                             title='WbgNews - Your News Source',
+                             title='Williamsburg Local News - Your Community Source',
                              current_year=datetime.now().year)
     
     @app.route('/api/health')
@@ -32,66 +32,144 @@ def create_app():
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.now().isoformat(),
-            'service': 'WbgNews'
+            'service': 'Williamsburg Local News'
         })
     
     @app.route('/about')
     def about():
         """About page"""
         return render_template('about.html', 
-                             title='About - WbgNews')
+                             title='About - Williamsburg Local News')
     
     @app.route('/news')
     def news():
         """News listing page"""
-        # Placeholder news data
-        sample_news = [
+        # Placeholder local news data
+        local_news = [
             {
                 'id': 1,
-                'title': 'Breaking: Sample News Article',
-                'summary': 'This is a placeholder for a news article summary...',
+                'title': 'New Community Center Opens in Historic District',
+                'summary': 'The Williamsburg Community Center officially opened its doors today, offering programs for residents of all ages...',
                 'date': '2025-07-04',
-                'author': 'News Team'
+                'author': 'Sarah Johnson',
+                'category': 'Community',
+                'location': 'Historic District'
             },
             {
                 'id': 2,
-                'title': 'Technology Update: AI Advances',
-                'summary': 'Latest developments in artificial intelligence...',
+                'title': 'Local Farmers Market Celebrates 10th Anniversary',
+                'summary': 'The Williamsburg Farmers Market marks a decade of serving fresh, local produce to the community...',
                 'date': '2025-07-03',
-                'author': 'Tech Reporter'
+                'author': 'Mike Chen',
+                'category': 'Events',
+                'location': 'Market Square'
             },
             {
                 'id': 3,
-                'title': 'Sports Highlights of the Week',
-                'summary': 'Recap of this week\'s most exciting sports moments...',
+                'title': 'School Board Approves New Playground Equipment',
+                'summary': 'Williamsburg Elementary will receive new playground equipment thanks to recent fundraising efforts...',
                 'date': '2025-07-02',
-                'author': 'Sports Desk'
+                'author': 'Lisa Rodriguez',
+                'category': 'Education',
+                'location': 'Williamsburg Elementary'
+            },
+            {
+                'id': 4,
+                'title': 'Fourth of July Fireworks Display Set for Tonight',
+                'summary': 'The annual Independence Day celebration will feature fireworks over Colonial Lake at 9 PM...',
+                'date': '2025-07-04',
+                'author': 'Tom Wilson',
+                'category': 'Events',
+                'location': 'Colonial Lake'
             }
         ]
         return render_template('news.html', 
-                             title='Latest News - WbgNews',
-                             news_articles=sample_news)
+                             title='Local News - Williamsburg',
+                             news_articles=local_news)
+    
+    @app.route('/events')
+    def events():
+        """Community events page"""
+        upcoming_events = [
+            {
+                'id': 1,
+                'title': 'Summer Concert Series',
+                'date': '2025-07-10',
+                'time': '7:00 PM',
+                'location': 'Colonial Park Amphitheater',
+                'description': 'Join us for an evening of live music featuring local bands.',
+                'category': 'Music'
+            },
+            {
+                'id': 2,
+                'title': 'Williamsburg Heritage Festival',
+                'date': '2025-07-15',
+                'time': '10:00 AM - 6:00 PM',
+                'location': 'Historic District',
+                'description': 'Celebrate our community\'s rich history with demonstrations, food, and activities.',
+                'category': 'Festival'
+            },
+            {
+                'id': 3,
+                'title': 'Town Hall Meeting',
+                'date': '2025-07-20',
+                'time': '7:30 PM',
+                'location': 'City Hall',
+                'description': 'Monthly community meeting to discuss local issues and upcoming projects.',
+                'category': 'Government'
+            }
+        ]
+        return render_template('events.html', 
+                             title='Community Events - Williamsburg',
+                             events=upcoming_events)
     
     @app.route('/api/news')
     def api_news():
         """API endpoint for news data"""
-        sample_news = [
+        local_news = [
             {
                 'id': 1,
-                'title': 'Breaking: Sample News Article',
-                'summary': 'This is a placeholder for a news article summary...',
+                'title': 'New Community Center Opens in Historic District',
+                'summary': 'The Williamsburg Community Center officially opened its doors today...',
                 'date': '2025-07-04',
-                'author': 'News Team'
+                'author': 'Sarah Johnson',
+                'category': 'Community',
+                'location': 'Historic District'
             },
             {
                 'id': 2,
-                'title': 'Technology Update: AI Advances',
-                'summary': 'Latest developments in artificial intelligence...',
+                'title': 'Local Farmers Market Celebrates 10th Anniversary',
+                'summary': 'The Williamsburg Farmers Market marks a decade of serving fresh, local produce...',
                 'date': '2025-07-03',
-                'author': 'Tech Reporter'
+                'author': 'Mike Chen',
+                'category': 'Events',
+                'location': 'Market Square'
             }
         ]
-        return jsonify({'news': sample_news})
+        return jsonify({'news': local_news})
+    
+    @app.route('/api/events')
+    def api_events():
+        """API endpoint for events data"""
+        upcoming_events = [
+            {
+                'id': 1,
+                'title': 'Summer Concert Series',
+                'date': '2025-07-10',
+                'time': '7:00 PM',
+                'location': 'Colonial Park Amphitheater',
+                'category': 'Music'
+            },
+            {
+                'id': 2,
+                'title': 'Williamsburg Heritage Festival',
+                'date': '2025-07-15',
+                'time': '10:00 AM - 6:00 PM',
+                'location': 'Historic District',
+                'category': 'Festival'
+            }
+        ]
+        return jsonify({'events': upcoming_events})
     
     @app.errorhandler(404)
     def not_found(error):

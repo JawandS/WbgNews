@@ -1,11 +1,15 @@
-/* Custom styles for WbgNews */
+/* Custom styles for Williamsburg Local News */
 
 :root {
-    --primary-color: #0d6efd;
+    --colonial-blue: #2c3e50;
+    --colonial-gold: #d4af37;
+    --colonial-red: #8b2635;
+    --colonial-green: #355e3b;
+    --primary-color: var(--colonial-blue);
     --secondary-color: #6c757d;
-    --success-color: #198754;
+    --success-color: var(--colonial-green);
     --warning-color: #ffc107;
-    --danger-color: #dc3545;
+    --danger-color: var(--colonial-red);
     --info-color: #0dcaf0;
     --light-color: #f8f9fa;
     --dark-color: #212529;
@@ -17,16 +21,52 @@ body {
     line-height: 1.6;
 }
 
+/* Colonial themed colors */
+.bg-colonial {
+    background-color: var(--colonial-blue) !important;
+}
+
+.text-colonial {
+    color: var(--colonial-blue) !important;
+}
+
+.btn-colonial {
+    background-color: var(--colonial-blue);
+    border-color: var(--colonial-blue);
+    color: white;
+}
+
+.btn-colonial:hover {
+    background-color: var(--colonial-gold);
+    border-color: var(--colonial-gold);
+    color: var(--colonial-blue);
+}
+
+.btn-outline-colonial {
+    border-color: var(--colonial-blue);
+    color: var(--colonial-blue);
+}
+
+.btn-outline-colonial:hover {
+    background-color: var(--colonial-blue);
+    border-color: var(--colonial-blue);
+    color: white;
+}
+
+.badge.bg-colonial {
+    background-color: var(--colonial-blue) !important;
+}
+
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #0b5ed7 100%);
+    background: linear-gradient(135deg, var(--colonial-blue) 0%, var(--colonial-red) 100%);
     min-height: 60vh;
     display: flex;
     align-items: center;
 }
 
-.bg-gradient-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #0b5ed7 100%);
+.bg-gradient-colonial {
+    background: linear-gradient(135deg, var(--colonial-blue) 0%, var(--colonial-red) 100%);
 }
 
 /* Card Hover Effects */
@@ -42,11 +82,19 @@ body {
 }
 
 .news-card {
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid var(--colonial-blue);
 }
 
 .news-card:hover {
-    border-left-color: var(--success-color);
+    border-left-color: var(--colonial-gold);
+}
+
+.event-card {
+    border-left: 4px solid var(--colonial-green);
+}
+
+.event-card:hover {
+    border-left-color: var(--colonial-gold);
 }
 
 /* Feature Icons */
@@ -82,25 +130,25 @@ body {
     transition: all 0.3s ease;
 }
 
-.btn-primary {
-    background: linear-gradient(45deg, var(--primary-color), #0b5ed7);
+.btn-colonial {
+    background: linear-gradient(45deg, var(--colonial-blue), var(--colonial-red));
     border: none;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(45deg, #0b5ed7, var(--primary-color));
+.btn-colonial:hover {
+    background: linear-gradient(45deg, var(--colonial-gold), var(--colonial-blue));
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+    box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
 }
 
-.btn-outline-primary {
+.btn-outline-colonial {
     border-radius: 25px;
     font-weight: 500;
 }
 
-.btn-outline-primary:hover {
+.btn-outline-colonial:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+    box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
 }
 
 /* Footer */
@@ -113,7 +161,7 @@ footer a {
 }
 
 footer a:hover {
-    color: var(--primary-color) !important;
+    color: var(--colonial-gold) !important;
     text-decoration: none;
 }
 
@@ -183,12 +231,12 @@ footer a:hover {
 
 /* Contact Info */
 .contact-info h5 {
-    color: var(--primary-color);
+    color: var(--colonial-blue);
     margin-bottom: 1rem;
 }
 
 .contact-info a {
-    color: var(--primary-color);
+    color: var(--colonial-blue);
     text-decoration: none;
 }
 
@@ -220,19 +268,36 @@ footer a:hover {
     border-radius: 25px !important;
     margin: 0 0.25rem;
     border: none;
-    color: var(--primary-color);
+    color: var(--colonial-blue);
 }
 
 .page-item.active .page-link {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--colonial-blue);
+    border-color: var(--colonial-blue);
 }
 
-/* Newsletter */
-.card-header {
-    background: linear-gradient(45deg, var(--primary-color), #0b5ed7);
+/* Card Headers */
+.card-header.bg-colonial {
+    background: linear-gradient(45deg, var(--colonial-blue), var(--colonial-red)) !important;
     color: white;
     border-radius: 10px 10px 0 0 !important;
+}
+
+/* Weather Widget */
+.card.bg-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+}
+
+/* Event Details */
+.event-details i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
 }
 
 /* Smooth Scrolling */
@@ -244,4 +309,17 @@ html {
 .badge {
     font-size: 0.75rem;
     padding: 0.35em 0.65em;
+}
+
+/* Colonial themed specific elements */
+.text-colonial-gold {
+    color: var(--colonial-gold) !important;
+}
+
+.bg-colonial-gold {
+    background-color: var(--colonial-gold) !important;
+}
+
+.border-colonial {
+    border-color: var(--colonial-blue) !important;
 }

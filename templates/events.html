@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-calendar me-3"></i>Community Events</h1>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-colonial active">All Events</button>
+                    <button type="button" class="btn btn-outline-colonial">Music</button>
+                    <button type="button" class="btn btn-outline-colonial">Festival</button>
+                    <button type="button" class="btn btn-outline-colonial">Government</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for event in events %}
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm event-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-colonial">{{ event.category }}</span>
+                        <small class="text-muted">{{ event.date }}</small>
+                    </div>
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">{{ event.description }}</p>
+                    <div class="event-details mt-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-clock text-colonial me-2"></i>
+                            <span>{{ event.time }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt text-colonial me-2"></i>
+                            <span>{{ event.location }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-sm btn-colonial">
+                            <i class="fas fa-calendar-plus me-1"></i>Add to Calendar
+                        </button>
+                        <button class="btn btn-sm btn-outline-colonial">
+                            <i class="fas fa-share me-1"></i>Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Event Submission -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3>Have an Event to Share?</h3>
+                    <p class="lead">Help keep the community informed about local events and activities.</p>
+                    <button class="btn btn-colonial btn-lg">
+                        <i class="fas fa-plus me-2"></i>Submit an Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar View Toggle -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <button class="btn btn-outline-colonial btn-lg" id="calendarToggle">
+                <i class="fas fa-calendar-alt me-2"></i>Switch to Calendar View
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Event category filter functionality
+document.querySelectorAll('.btn-group .btn').forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        const category = this.textContent.trim();
+        console.log('Filtering by category:', category);
+        // In a real application, this would filter the events
+    });
+});
+
+// Calendar view toggle
+document.getElementById('calendarToggle').addEventListener('click', function() {
+    alert('Calendar view would be implemented here!');
+});
+</script>
+{% endblock %}
