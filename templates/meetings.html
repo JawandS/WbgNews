@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Meeting Agendas & AI Summaries</h1>
+            
+            <!-- Filter Controls -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-6">
+                            <label for="source" class="form-label">Filter by Source</label>
+                            <select class="form-select" id="source" name="source">
+                                <option value="">All Sources</option>
+                                <option value="williamsburg" {% if current_source == 'williamsburg' %}selected{% endif %}>Williamsburg City Council</option>
+                                <option value="jamescity" {% if current_source == 'jamescity' %}selected{% endif %}>James City County</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="{{ url_for('meetings') }}" class="btn btn-outline-secondary">Clear</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Meeting List -->
+            {% if meetings and meetings.items %}
+                {% for meeting in meetings.items %}
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ meeting.meeting_title }}</h5>
+                        <span class="badge bg-{% if meeting.source == 'williamsburg' %}primary{% else %}success{% endif %}">
+                            {% if meeting.source == 'williamsburg' %}Williamsburg{% else %}James City{% endif %}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-calendar"></i> {{ meeting.meeting_date.strftime('%B %d, %Y') if meeting.meeting_date }}
+                                </p>
+                                
+                                {% if meeting.ai_summary %}
+                                    <div class="ai-summary">
+                                        <h6><i class="bi bi-robot"></i> AI Summary</h6>
+                                        <p class="text-muted">{{ meeting.ai_summary[:300] }}{% if meeting.ai_summary|length > 300 %}...{% endif %}</p>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Summary not yet available.</p>
+                                {% endif %}
+                                
+                                {% if meeting.ai_highlights %}
+                                    {% set highlights = meeting.ai_highlights | from_json %}
+                                    {% if highlights %}
+                                        <div class="highlights mt-3">
+                                            <h6>Key Highlights:</h6>
+                                            <ul class="list-unstyled">
+                                                {% for highlight in highlights[:3] %}
+                                                    <li class="mb-1">
+                                                        <i class="bi bi-arrow-right text-primary"></i>
+                                                        <strong>{{ highlight.title }}:</strong> {{ highlight.description[:100] }}{% if highlight.description|length > 100 %}...{% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <a href="{{ url_for('meeting_detail', meeting_id=meeting.id) }}" class="btn btn-outline-primary mb-2">View Details</a>
+                                <br>
+                                <a href="{{ meeting.original_url }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-box-arrow-up-right"></i> Original Document
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if meetings.pages > 1 %}
+                <nav aria-label="Meeting pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if meetings.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('meetings', page=meetings.prev_num, source=current_source) }}">Previous</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in meetings.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if page_num != meetings.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('meetings', page=page_num, source=current_source) }}">{{ page_num }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">…</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if meetings.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('meetings', page=meetings.next_num, source=current_source) }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    <h5>No meetings found</h5>
+                    <p>No meeting agendas are currently available. Check back later or contact the administrator if you think this is an error.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>About Meeting Data</h5>
+                </div>
+                <div class="card-body">
+                    <p>Our system automatically collects and analyzes meeting agendas from:</p>
+                    <ul>
+                        <li><strong>Williamsburg City Council</strong> - Official city meetings and public hearings</li>
+                        <li><strong>James City County</strong> - County commission meetings and planning sessions</li>
+                    </ul>
+                    <p>AI-powered summaries help you quickly understand the key points and decisions from each meeting.</p>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Quick Links</h5>
+                </div>
+                <div class="card-body">
+                    <a href="https://williamsburg.civicweb.net/Portal/MeetingTypeList.aspx" target="_blank" class="btn btn-outline-primary btn-sm mb-2 w-100">
+                        Williamsburg Council Site
+                    </a>
+                    <a href="https://www.jamescitycountyva.gov/129/Agendas-Minutes" target="_blank" class="btn btn-outline-success btn-sm w-100">
+                        James City County Site
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
