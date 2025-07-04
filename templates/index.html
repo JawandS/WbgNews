@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Welcome to WbgNews</h1>
+                <p class="lead mb-4">Your premier destination for breaking news, in-depth analysis, and comprehensive coverage of events that matter to you.</p>
+                <a href="{{ url_for('news') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-newspaper me-2"></i>Read Latest News
+                </a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-globe-americas display-1 opacity-75"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <section class="mb-5">
+                <h2 class="mb-4">Featured Stories</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Breaking News Alert</h5>
+                                <p class="card-text">Stay updated with the latest breaking news from around the world. Our team of experienced journalists brings you accurate and timely reporting.</p>
+                                <small class="text-muted">2 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Technology Insights</h5>
+                                <p class="card-text">Discover the latest trends in technology, from AI breakthroughs to cutting-edge innovations that are shaping our future.</p>
+                                <small class="text-muted">5 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="mb-4">Why Choose WbgNews?</h2>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-clock fa-3x text-primary"></i>
+                        </div>
+                        <h5>Real-time Updates</h5>
+                        <p>Get the latest news as it happens with our real-time reporting system.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5>Trusted Sources</h5>
+                        <p>All our content is verified and sourced from reliable, credible news outlets.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-mobile-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5>Mobile Friendly</h5>
+                        <p>Access news on any device with our responsive, mobile-optimized design.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-fire me-2"></i>Trending Now</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <a href="#" class="text-decoration-none">
+                                <strong>Global Climate Summit Results</strong>
+                                <br>
+                                <small class="text-muted">World leaders reach new agreements...</small>
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#" class="text-decoration-none">
+                                <strong>Tech Giants Announce Partnership</strong>
+                                <br>
+                                <small class="text-muted">Revolutionary collaboration in AI development...</small>
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#" class="text-decoration-none">
+                                <strong>Sports Championship Finals</strong>
+                                <br>
+                                <small class="text-muted">Unexpected upsets in this year's tournament...</small>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Newsletter</h5>
+                </div>
+                <div class="card-body">
+                    <p>Stay informed with our daily newsletter.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Enter your email">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

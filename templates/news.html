@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-newspaper me-3"></i>Latest News</h1>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active">All</button>
+                    <button type="button" class="btn btn-outline-primary">Technology</button>
+                    <button type="button" class="btn btn-outline-primary">Sports</button>
+                    <button type="button" class="btn btn-outline-primary">Politics</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for article in news_articles %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm news-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-primary">Breaking</span>
+                        <small class="text-muted">{{ article.date }}</small>
+                    </div>
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.summary }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>{{ article.author }}
+                        </small>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="News pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <button class="btn btn-primary btn-lg" id="loadMoreBtn">
+                <i class="fas fa-plus me-2"></i>Load More Articles
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load more functionality placeholder
+document.getElementById('loadMoreBtn').addEventListener('click', function() {
+    // This would typically make an API call to load more articles
+    alert('Load more functionality would be implemented here!');
+});
+</script>
+{% endblock %}
