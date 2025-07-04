@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}James City County - Board of Supervisors{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>
+                    <i class="fas fa-landmark text-success me-3"></i>
+                    James City County Board of Supervisors
+                </h2>
+                <p class="text-muted mb-0">Official meeting agendas and minutes</p>
+            </div>
+            <div>
+                <a href="https://www.jamescitycountyva.gov/129/Agendas-Minutes" target="_blank" class="btn btn-outline-success">
+                    <i class="fas fa-external-link-alt me-2"></i>
+                    Official Website
+                </a>
+            </div>
+        </div>
+
+        <!-- Meetings List -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Recent Meetings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="james-city-loading" class="text-center py-5">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading James City County meetings...</p>
+                </div>
+
+                <div id="james-city-meetings" class="d-none">
+                    <!-- Meetings will be loaded here -->
+                </div>
+
+                <div id="james-city-no-meetings" class="text-center py-5 d-none">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No meetings found</h5>
+                    <p class="text-muted">Check the official website for the latest updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadJamesCityMeetings();
+});
+
+function loadJamesCityMeetings() {
+    const loadingDiv = document.getElementById('james-city-loading');
+    const meetingsDiv = document.getElementById('james-city-meetings');
+    const noMeetingsDiv = document.getElementById('james-city-no-meetings');
+    
+    loadingDiv.classList.remove('d-none');
+    meetingsDiv.classList.add('d-none');
+    noMeetingsDiv.classList.add('d-none');
+    
+    fetch('/api/meetings')
+        .then(response => response.json())
+        .then(data => {
+            loadingDiv.classList.add('d-none');
+            
+            if (data.success && data.meetings.length > 0) {
+                const jamesCityMeetings = data.meetings.filter(m => m.council === 'james_city');
+                
+                if (jamesCityMeetings.length > 0) {
+                    displayJamesCityMeetings(jamesCityMeetings);
+                    meetingsDiv.classList.remove('d-none');
+                } else {
+                    noMeetingsDiv.classList.remove('d-none');
+                }
+            } else {
+                noMeetingsDiv.classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading meetings:', error);
+            loadingDiv.classList.add('d-none');
+            noMeetingsDiv.classList.remove('d-none');
+        });
+}
+
+function displayJamesCityMeetings(meetings) {
+    const meetingsDiv = document.getElementById('james-city-meetings');
+    meetingsDiv.innerHTML = '';
+    
+    meetings.forEach((meeting, index) => {
+        const meetingCard = createDetailedMeetingCard(meeting, index);
+        meetingsDiv.appendChild(meetingCard);
+    });
+}
+
+function createDetailedMeetingCard(meeting, index) {
+    const div = document.createElement('div');
+    div.className = 'meeting-item mb-4 p-4 border rounded shadow-sm';
+    
+    const statusBadge = meeting.status === 'completed' ? 
+        '<span class="badge bg-success fs-6">Completed</span>' : 
+        '<span class="badge bg-primary fs-6">Upcoming</span>';
+    
+    const agendaButton = meeting.agenda_url ? 
+        `<a href="${meeting.agenda_url}" target="_blank" class="btn btn-outline-success me-2">
+            <i class="fas fa-file-alt me-1"></i>View Agenda
+        </a>` : 
+        '<button class="btn btn-outline-secondary me-2" disabled>No Agenda Available</button>';
+    
+    const minutesButton = meeting.minutes_url ? 
+        `<a href="${meeting.minutes_url}" target="_blank" class="btn btn-outline-info me-2">
+            <i class="fas fa-file-text me-1"></i>View Minutes
+        </a>` : 
+        '<button class="btn btn-outline-secondary me-2" disabled>No Minutes Available</button>';
+    
+    div.innerHTML = `
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="mb-2">
+                    ${meeting.title}
+                    ${statusBadge}
+                </h5>
+                <p class="text-muted mb-2">
+                    <i class="fas fa-tag me-2"></i>${meeting.type}
+                </p>
+                <p class="text-muted mb-3">
+                    <i class="fas fa-calendar me-2"></i>${formatDate(meeting.date)}
+                    <span class="ms-4">
+                        <i class="fas fa-clock me-2"></i>${meeting.time}
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-flex flex-column gap-2">
+                    ${agendaButton}
+                    ${minutesButton}
+                    <a href="/meeting/james_city/${meeting.id}" class="btn btn-success">
+                        <i class="fas fa-eye me-1"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return div;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+</script>
+{% endblock %}

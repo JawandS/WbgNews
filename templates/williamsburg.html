@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Williamsburg City Council - Meetings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>
+                    <i class="fas fa-building text-primary me-3"></i>
+                    Williamsburg City Council
+                </h2>
+                <p class="text-muted mb-0">Official meeting agendas and minutes</p>
+            </div>
+            <div>
+                <a href="https://williamsburg.civicweb.net/" target="_blank" class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt me-2"></i>
+                    Official Website
+                </a>
+            </div>
+        </div>
+
+        <!-- Meetings List -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Recent Meetings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="williamsburg-loading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading Williamsburg City Council meetings...</p>
+                </div>
+
+                <div id="williamsburg-meetings" class="d-none">
+                    <!-- Meetings will be loaded here -->
+                </div>
+
+                <div id="williamsburg-no-meetings" class="text-center py-5 d-none">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No meetings found</h5>
+                    <p class="text-muted">Check the official website for the latest updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadWilliamsburgMeetings();
+});
+
+function loadWilliamsburgMeetings() {
+    const loadingDiv = document.getElementById('williamsburg-loading');
+    const meetingsDiv = document.getElementById('williamsburg-meetings');
+    const noMeetingsDiv = document.getElementById('williamsburg-no-meetings');
+    
+    loadingDiv.classList.remove('d-none');
+    meetingsDiv.classList.add('d-none');
+    noMeetingsDiv.classList.add('d-none');
+    
+    fetch('/api/meetings')
+        .then(response => response.json())
+        .then(data => {
+            loadingDiv.classList.add('d-none');
+            
+            if (data.success && data.meetings.length > 0) {
+                const williamsburgMeetings = data.meetings.filter(m => m.council === 'williamsburg');
+                
+                if (williamsburgMeetings.length > 0) {
+                    displayWilliamsburgMeetings(williamsburgMeetings);
+                    meetingsDiv.classList.remove('d-none');
+                } else {
+                    noMeetingsDiv.classList.remove('d-none');
+                }
+            } else {
+                noMeetingsDiv.classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading meetings:', error);
+            loadingDiv.classList.add('d-none');
+            noMeetingsDiv.classList.remove('d-none');
+        });
+}
+
+function displayWilliamsburgMeetings(meetings) {
+    const meetingsDiv = document.getElementById('williamsburg-meetings');
+    meetingsDiv.innerHTML = '';
+    
+    meetings.forEach((meeting, index) => {
+        const meetingCard = createDetailedMeetingCard(meeting, index);
+        meetingsDiv.appendChild(meetingCard);
+    });
+}
+
+function createDetailedMeetingCard(meeting, index) {
+    const div = document.createElement('div');
+    div.className = 'meeting-item mb-4 p-4 border rounded shadow-sm';
+    
+    const statusBadge = meeting.status === 'completed' ? 
+        '<span class="badge bg-success fs-6">Completed</span>' : 
+        '<span class="badge bg-primary fs-6">Upcoming</span>';
+    
+    const agendaButton = meeting.agenda_url ? 
+        `<a href="${meeting.agenda_url}" target="_blank" class="btn btn-outline-primary me-2">
+            <i class="fas fa-file-alt me-1"></i>View Agenda
+        </a>` : 
+        '<button class="btn btn-outline-secondary me-2" disabled>No Agenda Available</button>';
+    
+    const minutesButton = meeting.minutes_url ? 
+        `<a href="${meeting.minutes_url}" target="_blank" class="btn btn-outline-success me-2">
+            <i class="fas fa-file-text me-1"></i>View Minutes
+        </a>` : 
+        '<button class="btn btn-outline-secondary me-2" disabled>No Minutes Available</button>';
+    
+    div.innerHTML = `
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="mb-2">
+                    ${meeting.title}
+                    ${statusBadge}
+                </h5>
+                <p class="text-muted mb-2">
+                    <i class="fas fa-tag me-2"></i>${meeting.type}
+                </p>
+                <p class="text-muted mb-3">
+                    <i class="fas fa-calendar me-2"></i>${formatDate(meeting.date)}
+                    <span class="ms-4">
+                        <i class="fas fa-clock me-2"></i>${meeting.time}
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-flex flex-column gap-2">
+                    ${agendaButton}
+                    ${minutesButton}
+                    <a href="/meeting/williamsburg/${meeting.id}" class="btn btn-primary">
+                        <i class="fas fa-eye me-1"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return div;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+</script>
+{% endblock %}

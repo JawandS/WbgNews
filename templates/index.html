@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}Williamsburg News - Local Government Meetings{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-gradient-primary text-white rounded-3 p-5 mb-4">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-gavel me-3"></i>
+                Stay Informed About Local Government
+            </h1>
+            <p class="lead mb-4">
+                Track meeting agendas and notes from Williamsburg City Council and James City County Board of Supervisors
+            </p>
+            <div class="d-flex gap-3">
+                <a href="{{ url_for('williamsburg_council') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-building me-2"></i>Williamsburg City
+                </a>
+                <a href="{{ url_for('james_city_council') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-landmark me-2"></i>James City County
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4 text-center">
+            <i class="fas fa-balance-scale display-1 opacity-75"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                <h3 class="card-title" id="total-meetings">Loading...</h3>
+                <p class="card-text text-muted">Recent Meetings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-3x text-success mb-3"></i>
+                <h3 class="card-title" id="available-agendas">Loading...</h3>
+                <p class="card-text text-muted">Available Agendas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-3x text-info mb-3"></i>
+                <h3 class="card-title" id="upcoming-meetings">Loading...</h3>
+                <p class="card-text text-muted">Upcoming Meetings</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Meetings Section -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="mb-0">
+                            <i class="fas fa-clock me-2 text-primary"></i>
+                            Recent Meetings
+                        </h4>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshMeetings()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Loading Spinner -->
+                <div id="loading-spinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading recent meetings...</p>
+                </div>
+
+                <!-- Meetings List -->
+                <div id="meetings-list" class="d-none">
+                    <!-- Meetings will be loaded here via JavaScript -->
+                </div>
+
+                <!-- No Meetings Message -->
+                <div id="no-meetings" class="text-center py-5 d-none">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No recent meetings found</h5>
+                    <p class="text-muted">Check back later for updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Links Section -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-building me-2"></i>
+                    Williamsburg City Council
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Access agendas and minutes from Williamsburg City Council meetings.</p>
+                <a href="{{ url_for('williamsburg_council') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-1"></i>View Meetings
+                </a>
+                <a href="https://williamsburg.civicweb.net/" target="_blank" class="btn btn-outline-primary ms-2">
+                    <i class="fas fa-external-link-alt me-1"></i>Official Site
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-landmark me-2"></i>
+                    James City County
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Access agendas and minutes from James City County Board of Supervisors meetings.</p>
+                <a href="{{ url_for('james_city_council') }}" class="btn btn-success">
+                    <i class="fas fa-arrow-right me-1"></i>View Meetings
+                </a>
+                <a href="https://www.jamescitycountyva.gov/129/Agendas-Minutes" target="_blank" class="btn btn-outline-success ms-2">
+                    <i class="fas fa-external-link-alt me-1"></i>Official Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load meetings when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadMeetings();
+});
+
+function loadMeetings() {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const meetingsList = document.getElementById('meetings-list');
+    const noMeetings = document.getElementById('no-meetings');
+    
+    // Show loading spinner
+    loadingSpinner.classList.remove('d-none');
+    meetingsList.classList.add('d-none');
+    noMeetings.classList.add('d-none');
+    
+    fetch('/api/meetings')
+        .then(response => response.json())
+        .then(data => {
+            loadingSpinner.classList.add('d-none');
+            
+            if (data.success && data.meetings.length > 0) {
+                displayMeetings(data.meetings);
+                updateStatistics(data.meetings);
+                meetingsList.classList.remove('d-none');
+            } else {
+                noMeetings.classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading meetings:', error);
+            loadingSpinner.classList.add('d-none');
+            noMeetings.classList.remove('d-none');
+        });
+}
+
+function displayMeetings(meetings) {
+    const meetingsList = document.getElementById('meetings-list');
+    meetingsList.innerHTML = '';
+    
+    meetings.forEach(meeting => {
+        const meetingCard = createMeetingCard(meeting);
+        meetingsList.appendChild(meetingCard);
+    });
+}
+
+function createMeetingCard(meeting) {
+    const div = document.createElement('div');
+    div.className = 'meeting-card mb-3 p-3 border rounded';
+    
+    const statusBadge = meeting.status === 'completed' ? 
+        '<span class="badge bg-success">Completed</span>' : 
+        '<span class="badge bg-primary">Upcoming</span>';
+    
+    const councilIcon = meeting.council === 'williamsburg' ? 
+        '<i class="fas fa-building text-primary me-2"></i>' : 
+        '<i class="fas fa-landmark text-success me-2"></i>';
+    
+    const agendaLink = meeting.agenda_url ? 
+        `<a href="${meeting.agenda_url}" target="_blank" class="btn btn-sm btn-outline-primary me-2">
+            <i class="fas fa-file-alt me-1"></i>Agenda
+        </a>` : '';
+    
+    const minutesLink = meeting.minutes_url ? 
+        `<a href="${meeting.minutes_url}" target="_blank" class="btn btn-sm btn-outline-success me-2">
+            <i class="fas fa-file-text me-1"></i>Minutes
+        </a>` : '';
+    
+    div.innerHTML = `
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6 class="mb-1">
+                    ${councilIcon}
+                    ${meeting.title}
+                    ${statusBadge}
+                </h6>
+                <p class="text-muted mb-1">
+                    <i class="fas fa-building me-1"></i>${meeting.council_name}
+                </p>
+                <p class="text-muted mb-0">
+                    <i class="fas fa-calendar me-1"></i>${formatDate(meeting.date)}
+                    <i class="fas fa-clock ms-3 me-1"></i>${meeting.time}
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                ${agendaLink}
+                ${minutesLink}
+                <a href="/meeting/${meeting.council}/${meeting.id}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-eye me-1"></i>Details
+                </a>
+            </div>
+        </div>
+    `;
+    
+    return div;
+}
+
+function updateStatistics(meetings) {
+    const totalMeetings = meetings.length;
+    const availableAgendas = meetings.filter(m => m.agenda_url).length;
+    const upcomingMeetings = meetings.filter(m => m.status === 'upcoming').length;
+    
+    document.getElementById('total-meetings').textContent = totalMeetings;
+    document.getElementById('available-agendas').textContent = availableAgendas;
+    document.getElementById('upcoming-meetings').textContent = upcomingMeetings;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+function refreshMeetings() {
+    loadMeetings();
+}
+</script>
+{% endblock %}

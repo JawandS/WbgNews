@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Meeting Details - {{ council|title }} Council{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Back Button -->
+        <div class="mb-3">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+
+        <!-- Meeting Details Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="mb-0" id="meeting-title">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Loading Meeting Details...
+                        </h4>
+                    </div>
+                    <div class="col-auto">
+                        <span id="meeting-status-badge"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Loading State -->
+                <div id="meeting-loading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading meeting details...</p>
+                </div>
+
+                <!-- Meeting Content -->
+                <div id="meeting-content" class="d-none">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-info-circle me-2 text-primary"></i>Meeting Information</h6>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Date:</strong></td>
+                                    <td id="meeting-date">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Time:</strong></td>
+                                    <td id="meeting-time">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Location:</strong></td>
+                                    <td id="meeting-location">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Council:</strong></td>
+                                    <td id="meeting-council">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-file-alt me-2 text-success"></i>Documents</h6>
+                            <div id="meeting-documents">
+                                <!-- Documents will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agenda Items -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h6><i class="fas fa-list me-2 text-info"></i>Agenda Items</h6>
+                            <div id="agenda-items">
+                                <!-- Agenda items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="meeting-error" class="text-center py-5 d-none">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <h5 class="text-muted">Unable to load meeting details</h5>
+                    <p class="text-muted">Please try again later or check the official website.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const council = "{{ council }}";
+const meetingId = "{{ meeting_id }}";
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadMeetingDetails();
+});
+
+function loadMeetingDetails() {
+    const loadingDiv = document.getElementById('meeting-loading');
+    const contentDiv = document.getElementById('meeting-content');
+    const errorDiv = document.getElementById('meeting-error');
+    
+    loadingDiv.classList.remove('d-none');
+    contentDiv.classList.add('d-none');
+    errorDiv.classList.add('d-none');
+    
+    fetch(`/api/meeting/${council}/${meetingId}`)
+        .then(response => response.json())
+        .then(data => {
+            loadingDiv.classList.add('d-none');
+            
+            if (data.success && data.meeting) {
+                displayMeetingDetails(data.meeting);
+                contentDiv.classList.remove('d-none');
+            } else {
+                errorDiv.classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading meeting details:', error);
+            loadingDiv.classList.add('d-none');
+            errorDiv.classList.remove('d-none');
+        });
+}
+
+function displayMeetingDetails(meeting) {
+    // Update title and status
+    document.getElementById('meeting-title').innerHTML = `
+        <i class="fas fa-calendar-alt me-2"></i>
+        ${meeting.title}
+    `;
+    
+    const statusBadge = meeting.status === 'completed' ? 
+        '<span class="badge bg-success fs-6">Completed</span>' : 
+        '<span class="badge bg-primary fs-6">Upcoming</span>';
+    document.getElementById('meeting-status-badge').innerHTML = statusBadge;
+    
+    // Update meeting information
+    document.getElementById('meeting-date').textContent = formatDate(meeting.date);
+    document.getElementById('meeting-time').textContent = meeting.time;
+    document.getElementById('meeting-location').textContent = meeting.location || 'Not specified';
+    
+    const councilName = council === 'williamsburg' ? 
+        'Williamsburg City Council' : 
+        'James City County Board of Supervisors';
+    document.getElementById('meeting-council').textContent = councilName;
+    
+    // Display documents
+    displayDocuments(meeting.documents || []);
+    
+    // Display agenda items
+    displayAgendaItems(meeting.agenda_items || []);
+}
+
+function displayDocuments(documents) {
+    const documentsDiv = document.getElementById('meeting-documents');
+    
+    if (documents.length === 0) {
+        documentsDiv.innerHTML = '<p class="text-muted">No documents available</p>';
+        return;
+    }
+    
+    documentsDiv.innerHTML = '';
+    documents.forEach(doc => {
+        const buttonClass = doc.type === 'agenda' ? 'btn-outline-primary' : 'btn-outline-success';
+        const icon = doc.type === 'agenda' ? 'fas fa-file-alt' : 'fas fa-file-text';
+        
+        const docButton = document.createElement('a');
+        docButton.href = doc.url;
+        docButton.target = '_blank';
+        docButton.className = `btn ${buttonClass} me-2 mb-2`;
+        docButton.innerHTML = `<i class="${icon} me-1"></i>${doc.name}`;
+        
+        documentsDiv.appendChild(docButton);
+    });
+}
+
+function displayAgendaItems(agendaItems) {
+    const agendaDiv = document.getElementById('agenda-items');
+    
+    if (agendaItems.length === 0) {
+        agendaDiv.innerHTML = '<p class="text-muted">No agenda items available</p>';
+        return;
+    }
+    
+    const list = document.createElement('ol');
+    list.className = 'list-group list-group-numbered';
+    
+    agendaItems.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = item;
+        list.appendChild(listItem);
+    });
+    
+    agendaDiv.innerHTML = '';
+    agendaDiv.appendChild(list);
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+</script>
+{% endblock %}
